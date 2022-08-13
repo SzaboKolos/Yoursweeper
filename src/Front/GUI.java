@@ -11,7 +11,7 @@ import Back.NonMine;
 import Back.Game;
 
 /**
- *
+ * Frontend of the project, everything that can be seen is here.
  */
 public class GUI {
     /**
@@ -70,10 +70,13 @@ public class GUI {
     }
 
     /**
-     *
-     * @return
+     * Contains events for left and right mouse release,
+     * In case of left release it reveals the field, if it's a Mine,
+     * the player loses and can choose the difficulty for the next game.
+     * In case of right release it flags or unflags the field.
+     * @return MouseAdapter that can be put on fields individually
      */
-    private MouseAdapter cellRevealAdapter(){
+    private MouseAdapter cellActionAdapter(){
         return new java.awt.event.MouseAdapter() {
             @Override
             public void mouseReleased(java.awt.event.MouseEvent evt) {
@@ -108,10 +111,20 @@ public class GUI {
             }
         };
     }
+
+    /**
+     * If triggered reveals all fields and displays the difficulty changer window.
+     */
     private void lose(){
         revealAllFields();
         diffChangerFrame.setVisible(true);
     }
+
+    /**
+     * If clicked on non-hidden field and the neighboring flags match the number of Mines next to this field
+     * reveals all fields next to this field.
+     * @param f Field the action is triggered on.
+     */
     private void revealNeighborFields(Field f) {
         int thisR = f.getR();
         int thisC = f.getC();
@@ -167,6 +180,10 @@ public class GUI {
             playField.setValueAt(fS[7],thisR+1,thisC+1);
         }
     }
+
+    /**
+     * Reveals all fields on the table.
+     */
     private void revealAllFields(){
         game.revealFields();
         for (int r=0; r < game.rowNum();r++) {
@@ -175,6 +192,12 @@ public class GUI {
             }
         }
     }
+
+    /**
+     * Only called on fields that has no Mine neighbor, discovers all fields like this in a cluster
+     * reveals them, and gets called again recursively. Also reveals the NonMines on the cluster's rim.
+     * @param field Actual field to be discovered
+     */
     private void recursiveThingy(NonMine field){
         int thisR = field.getR();
         int thisC = field.getC();
@@ -249,6 +272,13 @@ public class GUI {
             }
         }
     }
+
+    /**
+     * Returns a field's neighbors in a Field array.
+     * @param thisR Field's row id.
+     * @param thisC Field's column id.
+     * @return Array of neighbor Fields.
+     */
     private Field[] getNeighbors(int thisR, int thisC){
         Game fTable = game;
 
@@ -263,6 +293,11 @@ public class GUI {
         Field SEF = fTable.getFieldAt(thisR+1,thisC+1);
         return (new Field[]{SF, EF, NF, WF, NWF, NEF, SWF, SEF});
     }
+
+    /**
+     * Sets starting state of the JTable the playfield is on.
+     * @return JTable with initial values.
+     */
     private JTable initTable(){
         DefaultTableCellRenderer centerRenderer = new DefaultTableCellRenderer();
         centerRenderer.setHorizontalAlignment( JLabel.CENTER );
@@ -271,9 +306,14 @@ public class GUI {
         JTable table = new JTable(model);
         setTableDesign(table);
         //table.setEnabled(false);
-        table.addMouseListener(cellRevealAdapter());
+        table.addMouseListener(cellActionAdapter());
         return table;
     }
+
+    /**
+     * Creates the model the playfield's JTable is set on.
+     * @return DefaultTableModel with size matching the difficulty setting.
+     */
     private DefaultTableModel makeModel(){
         Object[][] fields = new Object[game.rowNum()][game.colNum()];
         String[] colNames = new String[game.colNum()];
@@ -292,6 +332,11 @@ public class GUI {
         }
         });
     }
+
+    /**
+     * Sets visual options of given JTable and its cells.
+     * @param table JTable to be styled
+     */
     private void setTableDesign(JTable table){
         DefaultTableCellRenderer centerRenderer = new DefaultTableCellRenderer();
         centerRenderer.setHorizontalAlignment( JLabel.CENTER );
@@ -341,7 +386,10 @@ public class GUI {
         return btnThis;
     }
 
-
+    /**
+     * Initializes menu panel's and changer frame's appearance and layout.
+     * @return JPanel with buttons and information of the current game.
+     */
     private JPanel initMenuPanel(){
         diffChangerFrame = new JFrame();
         diffChangerFrame.setSize(new Dimension(250,75));
@@ -351,6 +399,7 @@ public class GUI {
         panel.setLayout(new BoxLayout(panel, BoxLayout.PAGE_AXIS));
         panel.add(btnNew);
 
+        //TODO timer and difficulty information
         btnNew.addMouseListener(new MouseAdapter() {
             public void mouseReleased(MouseEvent e) {
                 diffChangerFrame.setVisible(true);
@@ -358,6 +407,11 @@ public class GUI {
         });
         return panel;
     }
+
+    /**
+     * Resets the minefield to a fresh start.
+     * @param diff Selector for the difficulty of the new game
+     */
     private void replantTable(int diff){
         game = new Game(diff);
         model.setRowCount(game.rowNum());
@@ -369,14 +423,32 @@ public class GUI {
             }
         }
     }
+
+    /**
+     * Renderer to change text of a single cell at a time.
+     */
     static class CellColorRenderer extends DefaultTableCellRenderer {
         Color color1;
 
+        /**
+         * Creates a new instance of CellColorRenderer.
+         * @param foregroundColor The new color of the text in the cell.
+         */
         public CellColorRenderer(Color foregroundColor) {
             super();
             this.color1 = foregroundColor;
         }
 
+        /**
+         *
+         * @param table
+         * @param value
+         * @param isSelected
+         * @param hasFocus
+         * @param row
+         * @param column
+         * @return
+         */
         public Component getTableCellRendererComponent(JTable table, Object value, boolean isSelected, boolean hasFocus, int row, int column) {
             Component cell = super.getTableCellRendererComponent(table, value, isSelected, hasFocus, row, column);
             cell.setForeground(color1);
