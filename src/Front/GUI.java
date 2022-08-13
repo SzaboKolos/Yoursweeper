@@ -428,7 +428,7 @@ public class GUI {
      * Renderer to change text of a single cell at a time.
      */
     static class CellColorRenderer extends DefaultTableCellRenderer {
-        Color color1;
+        Color color;
 
         /**
          * Creates a new instance of CellColorRenderer.
@@ -436,22 +436,22 @@ public class GUI {
          */
         public CellColorRenderer(Color foregroundColor) {
             super();
-            this.color1 = foregroundColor;
+            this.color = foregroundColor;
         }
 
         /**
-         *
-         * @param table
-         * @param value
-         * @param isSelected
-         * @param hasFocus
-         * @param row
-         * @param column
-         * @return
+         * Gets a cell modifies it, then returns it.
+         * @param table Table
+         * @param value Object in cell
+         * @param isSelected Always false, cells can't be selected
+         * @param hasFocus Always false
+         * @param row Row the cell is in
+         * @param column Column the cell is in
+         * @return The modified (colored) cell
          */
         public Component getTableCellRendererComponent(JTable table, Object value, boolean isSelected, boolean hasFocus, int row, int column) {
             Component cell = super.getTableCellRendererComponent(table, value, isSelected, hasFocus, row, column);
-            cell.setForeground(color1);
+            cell.setForeground(color);
             this.setHorizontalAlignment( JLabel.CENTER );
             return cell;
         }
