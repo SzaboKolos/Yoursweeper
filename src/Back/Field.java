@@ -5,11 +5,29 @@ package Back;
  *
  */
 public abstract class Field{
+    /**
+     * X and Y coordinates of the Field.
+     */
     protected Pos position;
+    /**
+     * Character that represents this concrete field.
+     */
     protected char icon;
+    /**
+     * Character that represents all fields if hidden.
+     */
     protected char hiddenIcon = '-';
+    /**
+     * Character that represents all fields if flagged.
+     */
     protected char flag = '₱';
+    /**
+     * Indicates if field is hidden.
+     */
     protected boolean isHidden = true;
+    /**
+     * Indicates if field is flagged.
+     */
     protected boolean isFlagged = false;
 
     /**
