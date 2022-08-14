@@ -175,6 +175,7 @@ public class Game {
                         if (r != 0 && c != 0 && isMine(minefield[r-1][c-1]))
                             nm.plusState();
                     }
+                    nm.setColor();
                 }
             }
         }

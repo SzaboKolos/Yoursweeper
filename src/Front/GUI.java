@@ -98,11 +98,11 @@ public class GUI {
                     else if (SwingUtilities.isRightMouseButton(evt)) {
                         if (thisField.isFlagged()) {
                             thisField.unflag();
-                            playField.getColumnModel().getColumn(col).setCellRenderer(new CellColorRenderer(Color.black));
+                            colorField(col,Color.black);
                         }
                         else {
                             thisField.flag();
-                            playField.getColumnModel().getColumn(col).setCellRenderer(new CellColorRenderer(Color.red));
+                            colorField(col,Color.red);
                         }
                     }
                     playField.setValueAt(thisField, row, col);
@@ -110,6 +110,9 @@ public class GUI {
                 }
             }
         };
+    }
+    private void colorField(int col, Color kol){
+        playField.getColumnModel().getColumn(col).setCellRenderer(new CellColorRenderer(kol));
     }
 
     /**
@@ -189,6 +192,7 @@ public class GUI {
         for (int r=0; r < game.rowNum();r++) {
             for (int c=0; c < game.colNum();c++) {
                 playField.setValueAt(game.getField()[r][c].getIcon(),r,c);
+                colorField(c,game.getField()[r][c].getFieldColor());
             }
         }
     }
