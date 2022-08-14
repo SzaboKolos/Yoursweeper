@@ -49,21 +49,4 @@ public class NonMine extends Field {
     public void plusState(){
         this.state = this.state+1;
     }
-
-    /**
-     *
-     */
-    public void setColor(){
-        switch (this.getState()){
-            default -> this.setFieldColor(Color.black);
-            case 1 -> this.setFieldColor(Color.blue);
-            case 2 -> this.setFieldColor(Color.green);
-            case 3 -> this.setFieldColor(Color.red);
-            case 4 -> this.setFieldColor(Color.getColor("#0000AA"));
-            case 5 -> this.setFieldColor(Color.getColor("#AA0000"));
-            case 6 -> this.setFieldColor(Color.getColor("#00AAAA"));
-            case 7 -> this.setFieldColor(Color.getColor("#AA00AA"));
-            case 8 -> this.setFieldColor(Color.getColor("#FFAA00"));
-        }
-    }
 }

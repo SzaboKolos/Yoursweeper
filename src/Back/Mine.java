@@ -13,7 +13,6 @@ public class Mine extends Field{
     public Mine(Pos p){
         position = p;
         icon = '☼';
-        fieldColor = Color.black;
     }
 
     /**

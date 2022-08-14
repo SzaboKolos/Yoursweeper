@@ -32,10 +32,6 @@ public abstract class Field{
      */
     protected boolean isFlagged = false;
     /**
-     * The color it should be colored, if not hidden or flagged.
-     */
-    protected Color fieldColor;
-    /**
      * Returns the value of given Field's position
      * @return Position of given Field
      */
@@ -110,15 +106,4 @@ public abstract class Field{
         return isFlagged;
     }
 
-    /**
-     * Sets the field's color to the color given in the parameter.
-     * @param kolor New color of the field
-     */
-    public void setFieldColor(Color kolor){ fieldColor = kolor; }
-
-    /**
-     * Returns Field's fieldColor attribute.
-     * @return Color of the Field
-     */
-    public Color getFieldColor(){return fieldColor;}
 }

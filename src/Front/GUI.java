@@ -92,28 +92,32 @@ public class GUI {
                             recursiveThingy((NonMine) thisField);
                         else if (thisField.getClass().getSimpleName().equals("Mine"))
                             lose();
-                        else
+                        else {
                             game.revealField(row, col);
+                            colorField(game.getField()[row][col]);
+                        }
                     }
-                    else if (SwingUtilities.isRightMouseButton(evt)) {
+                    else if (SwingUtilities.isRightMouseButton(evt) && thisField.isHidden()) {
                         if (thisField.isFlagged()) {
                             thisField.unflag();
-                            colorField(col,Color.black);
                         }
                         else {
                             thisField.flag();
-                            colorField(col,Color.red);
                         }
+                    colorField(thisField);
                     }
                     playField.setValueAt(thisField, row, col);
+                    // (debug)
                     System.out.println(thisField.getClass().getSimpleName()+ thisField.getPos()+" H:"+ thisField.isHidden() +"; F:"+ thisField.isFlagged());
                 }
             }
         };
     }
-    private void colorField(int col, Color kol){
-        playField.getColumnModel().getColumn(col).setCellRenderer(new CellColorRenderer(kol));
+    private void colorField(Field f) {
+        TableColumn tc = playField.getColumnModel().getColumn(f.getC());
+        tc.setCellRenderer(new CellColorRenderer());
     }
+
 
     /**
      * If triggered reveals all fields and displays the difficulty changer window.
@@ -131,10 +135,10 @@ public class GUI {
     private void revealNeighborFields(Field f) {
         int thisR = f.getR();
         int thisC = f.getC();
-        Game fTable = game;
+
         Field[] fS = getNeighbors(thisR,thisC);
 
-        if (fTable.isNonMine(fS[0]) && fS[0].isHidden()){
+        if (game.isNonMine(fS[0]) && fS[0].isHidden()){
             if (((NonMine)fS[0]).getState()==0)
                 recursiveThingy((NonMine)fS[0]);
             else {
@@ -142,7 +146,7 @@ public class GUI {
                 playField.setValueAt(fS[0],thisR-1,thisC);
             }
         }
-        if (fTable.isNonMine(fS[1]) && fS[1].isHidden()) {
+        if (game.isNonMine(fS[1]) && fS[1].isHidden()) {
             if (((NonMine)fS[1]).getState()==0)
                 recursiveThingy((NonMine)fS[1]);
             else {
@@ -150,7 +154,7 @@ public class GUI {
                 playField.setValueAt(fS[1],thisR,thisC+1);
             }
         }
-        if (fTable.isNonMine(fS[2]) && fS[2].isHidden()){
+        if (game.isNonMine(fS[2]) && fS[2].isHidden()){
             if (((NonMine)fS[2]).getState()==0)
                 recursiveThingy((NonMine)fS[2]);
             else {
@@ -158,7 +162,7 @@ public class GUI {
                 playField.setValueAt(fS[2],thisR+1,thisC);
             }
         }
-        if (fTable.isNonMine(fS[3]) && fS[3].isHidden()){
+        if (game.isNonMine(fS[3]) && fS[3].isHidden()){
             if (((NonMine)fS[3]).getState()==0)
                 recursiveThingy((NonMine)fS[3]);
             else {
@@ -166,19 +170,19 @@ public class GUI {
                 playField.setValueAt(fS[3],thisR,thisC-1);
             }
         }
-        if (fTable.isNonMine(fS[4]) && ((NonMine)fS[4]).getState()!=0 && fS[4].isHidden()){
+        if (game.isNonMine(fS[4]) && ((NonMine)fS[4]).getState()!=0 && fS[4].isHidden()){
             fS[4].reveal();
             playField.setValueAt(fS[4],thisR-1,thisC-1);
         }
-        if (fTable.isNonMine(fS[5]) && ((NonMine)fS[5]).getState()!=0 && fS[5].isHidden()){
+        if (game.isNonMine(fS[5]) && ((NonMine)fS[5]).getState()!=0 && fS[5].isHidden()){
             fS[5].reveal();
             playField.setValueAt(fS[5],thisR-1,thisC+1);
         }
-        if (fTable.isNonMine(fS[6]) && ((NonMine)fS[6]).getState()!=0 && fS[6].isHidden()){
+        if (game.isNonMine(fS[6]) && ((NonMine)fS[6]).getState()!=0 && fS[6].isHidden()){
             fS[6].reveal();
             playField.setValueAt(fS[6],thisR+1,thisC-1);
         }
-        if (fTable.isNonMine(fS[7]) && ((NonMine)fS[7]).getState()!=0 && fS[7].isHidden()){
+        if (game.isNonMine(fS[7]) && ((NonMine)fS[7]).getState()!=0 && fS[7].isHidden()){
             fS[7].reveal();
             playField.setValueAt(fS[7],thisR+1,thisC+1);
         }
@@ -192,7 +196,7 @@ public class GUI {
         for (int r=0; r < game.rowNum();r++) {
             for (int c=0; c < game.colNum();c++) {
                 playField.setValueAt(game.getField()[r][c].getIcon(),r,c);
-                colorField(c,game.getField()[r][c].getFieldColor());
+                colorField(game.getField()[r][c]);
             }
         }
     }
@@ -206,72 +210,79 @@ public class GUI {
         int thisR = field.getR();
         int thisC = field.getC();
         field.reveal();
-        playField.setValueAt(field,thisR,thisC);
-        Game fTable = game;
+        playField.setValueAt(field, thisR, thisC);
 
-        Field[] fS = getNeighbors(thisR,thisC);
+        Field[] fS = getNeighbors(thisR, thisC);
 
-        if (fTable.isNonMine(fS[0]) && fS[0].isHidden()){
+        if (game.isNonMine(fS[0]) && fS[0].isHidden()){
             if (((NonMine)fS[0]).getState()==0)
                 recursiveThingy((NonMine)fS[0]);
             else {
                 fS[0].reveal();
+                colorField(fS[0]);
                 playField.setValueAt(fS[0],thisR-1,thisC);
             }
         }
-        if (fTable.isNonMine(fS[1]) && fS[1].isHidden()) {
+        if (game.isNonMine(fS[1]) && fS[1].isHidden()) {
             if (((NonMine)fS[1]).getState()==0)
                 recursiveThingy((NonMine)fS[1]);
             else {
                 fS[1].reveal();
+                colorField(fS[1]);
                 playField.setValueAt(fS[1],thisR,thisC+1);
             }
         }
-        if (fTable.isNonMine(fS[2]) && fS[2].isHidden()){
+        if (game.isNonMine(fS[2]) && fS[2].isHidden()){
             if (((NonMine)fS[2]).getState()==0)
                 recursiveThingy((NonMine)fS[2]);
             else {
                 fS[2].reveal();
+                colorField(fS[2]);
                 playField.setValueAt(fS[2],thisR+1,thisC);
             }
         }
-        if (fTable.isNonMine(fS[3]) && fS[3].isHidden()){
+        if (game.isNonMine(fS[3]) && fS[3].isHidden()){
             if (((NonMine)fS[3]).getState()==0)
                 recursiveThingy((NonMine)fS[3]);
             else {
                 fS[3].reveal();
+                colorField(fS[3]);
                 playField.setValueAt(fS[3],thisR,thisC-1);
             }
         }
-        if (fTable.isNonMine(fS[4]) && fS[4].isHidden()){
+        if (game.isNonMine(fS[4]) && fS[4].isHidden()){
             if (((NonMine)fS[4]).getState()==0)
                 recursiveThingy((NonMine)fS[4]);
             else {
                 fS[4].reveal();
+                colorField(fS[4]);
                 playField.setValueAt(fS[4],thisR-1,thisC-1);
             }
         }
-        if (fTable.isNonMine(fS[5]) && fS[5].isHidden()){
+        if (game.isNonMine(fS[5]) && fS[5].isHidden()){
             if (((NonMine)fS[5]).getState()==0)
                 recursiveThingy((NonMine)fS[5]);
             else {
                 fS[5].reveal();
+                colorField(fS[5]);
                 playField.setValueAt(fS[5],thisR-1,thisC+1);
             }
         }
-        if (fTable.isNonMine(fS[6])&& fS[6].isHidden()){
+        if (game.isNonMine(fS[6])&& fS[6].isHidden()){
             if (((NonMine)fS[6]).getState()==0 )
                 recursiveThingy((NonMine)fS[6]);
             else{
                 fS[6].reveal();
+                colorField(fS[6]);
                 playField.setValueAt(fS[6],thisR+1,thisC-1);
             }
         }
-        if (fTable.isNonMine(fS[7]) && fS[7].isHidden()) {
+        if (game.isNonMine(fS[7]) && fS[7].isHidden()) {
             if (((NonMine) fS[7]).getState() == 0)
                 recursiveThingy((NonMine) fS[7]);
             else {
                 fS[7].reveal();
+                colorField(fS[7]);
                 playField.setValueAt(fS[7], thisR + 1, thisC + 1);
             }
         }
@@ -330,11 +341,7 @@ public class GUI {
             }
         }
 
-        return( new DefaultTableModel(fields,colNames) {public boolean isCellEditable(int row, int column)
-        {
-            return false;
-        }
-        });
+        return( new DefaultTableModel(fields,colNames) {public boolean isCellEditable(int row, int column) { return false; }});
     }
 
     /**
@@ -354,7 +361,7 @@ public class GUI {
             tabCol.setPreferredWidth(20);
             tabCol.setMinWidth(20);
             tabCol.setMaxWidth(20);
-            tabCol.setCellRenderer( centerRenderer);
+            tabCol.setCellRenderer(centerRenderer);
             tabCol.setResizable(false);
         }
         for (int r=0; r < game.rowNum();r++) {
@@ -428,19 +435,21 @@ public class GUI {
         }
     }
 
+
+
     /**
      * Renderer to change text of a single cell at a time.
      */
-    static class CellColorRenderer extends DefaultTableCellRenderer {
-        Color color;
-
+    class CellColorRenderer extends DefaultTableCellRenderer {
+        /**
+         * Bocsi nem hagyhattam ki :P
+         */
+        Color kolor;
         /**
          * Creates a new instance of CellColorRenderer.
-         * @param foregroundColor The new color of the text in the cell.
          */
-        public CellColorRenderer(Color foregroundColor) {
+        public CellColorRenderer() {
             super();
-            this.color = foregroundColor;
         }
 
         /**
@@ -455,9 +464,33 @@ public class GUI {
          */
         public Component getTableCellRendererComponent(JTable table, Object value, boolean isSelected, boolean hasFocus, int row, int column) {
             Component cell = super.getTableCellRendererComponent(table, value, isSelected, hasFocus, row, column);
-            cell.setForeground(color);
-            this.setHorizontalAlignment( JLabel.CENTER );
+            if (game.getFieldAt(row, column).isHidden())
+                kolor = (Color.black);
+            else {
+                if (game.isNonMine(game.getFieldAt(row, column))) {
+                    switch (((NonMine) game.getFieldAt(row, column)).getState()) {
+                        default -> kolor = (Color.black);
+                        case 1 -> kolor = (Color.blue);
+                        case 2 -> kolor = (Color.decode("#00AA00")); //Dark Green
+                        case 3 -> kolor = (Color.decode("#55FFFF")); //Light Aqua
+                        case 4 -> kolor = (Color.decode("#0000AA")); //Dark Blue
+                        case 5 -> kolor = (Color.decode("#AA0000")); //Dark Red
+                        case 6 -> kolor = (Color.decode("#00AAAA")); //Dark Aqua
+                        case 7 -> kolor = (Color.decode("#AA00AA")); //Dark Purple
+                        case 8 -> kolor = (Color.decode("#FFAA00")); //Gold
+                    }
+                }
+                else
+                    kolor = (Color.black);
+            }
+            if (game.getFieldAt(row, column).isFlagged())
+                kolor = (Color.red);
+
+            cell.setForeground(kolor);
+            this.setFont(new Font("Arial", Font.BOLD, 12));
+            this.setHorizontalAlignment(JLabel.CENTER);
             return cell;
-        }
+            }
+
     }
 }
