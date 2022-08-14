@@ -1,5 +1,7 @@
 package Back;
 
+import java.awt.*;
+
 /**
  * Abstract ancestor of Mine and NonMine types.
  *
@@ -30,6 +32,7 @@ public abstract class Field{
      */
     protected boolean isFlagged = false;
 
+    Color fieldColor;
     /**
      * Returns the value of given Field's position
      * @return Position of given Field
@@ -104,4 +107,10 @@ public abstract class Field{
     public boolean isFlagged() {
         return isFlagged;
     }
+
+    /**
+     * Sets the field's color to the color given in the parameter.
+     * @param kolor New color of the field
+     */
+    public void setFieldColor(Color kolor){ fieldColor = kolor; }
 }
