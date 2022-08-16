@@ -35,8 +35,8 @@ public class GUI {
      */
     private JFrame diffChangerFrame;
 
-    private Timer timer = initNewTimer();
-    private Label labelTime = new Label("0");
+    private final TimeManager timeManager = new TimeManager();
+    private Timer timer;
     /**
      * Creates instance of GUI.
      * @param g Inintial game
@@ -127,6 +127,7 @@ public class GUI {
     private void lose(){
         revealAllFields();
         diffChangerFrame.setVisible(true);
+        timer.stop();
     }
 
     /**
@@ -359,7 +360,7 @@ public class GUI {
     private void setTableDesign(JTable table){
         DefaultTableCellRenderer centerRenderer = new DefaultTableCellRenderer();
         centerRenderer.setHorizontalAlignment( JLabel.CENTER );
-        table.setFont(new Font("Arial", Font.PLAIN, 12));
+        table.setFont(new Font("Arial Unicode", Font.BOLD, 12));
         table.getColumnModel().setColumnSelectionAllowed(false);
         table.getTableHeader().setReorderingAllowed(false);
         table.setRowSelectionAllowed(false);
@@ -400,7 +401,7 @@ public class GUI {
                 replantTable(diff);
                 mainFrame.setSize((20*game.colNum()+26),20*game.rowNum()+74);
                 mainFrame.setLocationRelativeTo(null);
-                timer.restart();
+                timeManager.resetTime();
             }
         });
         return btnThis;
@@ -416,9 +417,17 @@ public class GUI {
         diffChangerFrame.setResizable(false);
         JButton btnNew = new JButton("New Game");
         JPanel panel = new JPanel();
+        Label labelTime = new Label("0");
         panel.setLayout(new FlowLayout(FlowLayout.LEADING));
         panel.add(btnNew);
         panel.add(labelTime);
+        timer = new Timer(1000, new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                timeManager.incrTime(1);
+                labelTime.setText(timeManager.getTime());
+            }
+        });
         timer.start();
 
         btnNew.addMouseListener(new MouseAdapter() {
@@ -428,17 +437,7 @@ public class GUI {
         });
         return panel;
     }
-    private Timer initNewTimer(){
-        return new Timer(1000, new ActionListener() {
-            int currentSec = 0;
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                currentSec++;
-                labelTime.setText(currentSec+"");
-            }
-        });
 
-    }
     /**
      * Resets the minefield to a fresh start.
      * @param diff Selector for the difficulty of the new game
@@ -503,7 +502,7 @@ public class GUI {
             if (game.getFieldAt(row, column).isFlagged())
                 kolor = (Color.red);
             cell.setForeground(kolor);
-            this.setFont(new Font("Arial", Font.BOLD, 12));
+            this.setFont(new Font("Arial Unicode", Font.BOLD, 12));
             this.setHorizontalAlignment(JLabel.CENTER);
             return cell;
             }
