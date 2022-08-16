@@ -5,6 +5,7 @@ import java.awt.event.*;
 import javax.swing.table.DefaultTableCellRenderer;
 import javax.swing.table.*;
 import java.awt.*;
+import java.util.Arrays;
 
 import Back.Field;
 import Back.NonMine;
@@ -13,7 +14,7 @@ import Back.Game;
 /**
  * Frontend of the project, everything that can be seen is here.
  */
-public class GUI {
+public class Graphics {
     /**
      * Attribute of the Game to be played.
      */
@@ -41,7 +42,7 @@ public class GUI {
      * Creates instance of GUI.
      * @param g Inintial game
      */
-    public GUI(Game g){
+    public Graphics(Game g){
         game = g;
         initFrame();
     }
@@ -134,7 +135,7 @@ public class GUI {
     }
 
     /**
-     *
+     * If all the conditions are met, you win
      */
     private void win(){
         //TODO if all mines are flagged and all nonmines are revealed
@@ -149,8 +150,9 @@ public class GUI {
         int thisC = f.getC();
 
         Field[] fS = getNeighbors(thisR,thisC);
-
-        if (!f.isFlagged()){
+        if (Arrays.stream(fS).anyMatch(x -> game.isMine(x) && !x.isFlagged())){
+            lose();
+        } else if (!f.isFlagged()){
             if (game.isNonMine(fS[0]) && fS[0].isHidden()){
                 fS[0].reveal();
                 playField.setValueAt(fS[0],thisR-1,thisC);
