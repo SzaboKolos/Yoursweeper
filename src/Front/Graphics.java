@@ -152,40 +152,17 @@ public class Graphics {
         Field[] fS = getNeighbors(thisR,thisC);
         if (Arrays.stream(fS).anyMatch(x -> game.isMine(x) && !x.isFlagged())){
             lose();
-        } else if (!f.isFlagged()){
-            if (game.isNonMine(fS[0]) && fS[0].isHidden()){
-                fS[0].reveal();
-                playField.setValueAt(fS[0],thisR-1,thisC);
+        } else
+            for (Field field: fS){
+                if (field != null && !field.isFlagged()){
+                    if (game.isNonMine(field) && ((NonMine)field).getState() == 0){
+                        recursiveThingy((NonMine) field);}
+                    else if (game.isNonMine(field))
+                        field.reveal();
+                    playField.setValueAt(field,field.getR(),field.getC());
+                    colorField(field);
+                }
             }
-            if (game.isNonMine(fS[1]) && fS[1].isHidden()) {
-                fS[1].reveal();
-                playField.setValueAt(fS[1],thisR,thisC+1);
-            }
-            if (game.isNonMine(fS[2]) && fS[2].isHidden()){
-                fS[2].reveal();
-                playField.setValueAt(fS[2],thisR+1,thisC);
-            }
-            if (game.isNonMine(fS[3]) && fS[3].isHidden()){
-                fS[3].reveal();
-                playField.setValueAt(fS[3],thisR,thisC-1);
-            }
-            if (game.isNonMine(fS[4]) && ((NonMine)fS[4]).getState()!=0 && fS[4].isHidden()){
-                fS[4].reveal();
-                playField.setValueAt(fS[4],thisR-1,thisC-1);
-            }
-            if (game.isNonMine(fS[5]) && ((NonMine)fS[5]).getState()!=0 && fS[5].isHidden()){
-                fS[5].reveal();
-                playField.setValueAt(fS[5],thisR-1,thisC+1);
-            }
-            if (game.isNonMine(fS[6]) && ((NonMine)fS[6]).getState()!=0 && fS[6].isHidden()){
-                fS[6].reveal();
-                playField.setValueAt(fS[6],thisR+1,thisC-1);
-            }
-            if (game.isNonMine(fS[7]) && ((NonMine)fS[7]).getState()!=0 && fS[7].isHidden()){
-                fS[7].reveal();
-                playField.setValueAt(fS[7],thisR+1,thisC+1);
-            }
-        }
     }
 
     /**
