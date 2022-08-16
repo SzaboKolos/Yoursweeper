@@ -3,7 +3,7 @@ package Back;
 import java.awt.*;
 
 /**
- * Descendant of Field
+ * Descendant of Field.
  */
 public class NonMine extends Field {
     /**
@@ -12,7 +12,7 @@ public class NonMine extends Field {
     private int state = 0; // how many bombs are around the field
 
     /**
-     * Constructs an instance of NonMine
+     * Constructs an instance of NonMine.
      * @param p Pos, Field's position
      */
     public NonMine(Pos p) {

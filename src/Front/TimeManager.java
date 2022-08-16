@@ -11,7 +11,7 @@ public class TimeManager {
 
     /**
      * Increments time attribute by delay.
-     * @param delay Incrementation value in seconds.
+     * @param delay Incrementation value in seconds
      */
     public void incrTime(int delay){
         time = time+delay;

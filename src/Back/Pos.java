@@ -4,11 +4,11 @@ package Back;
  */
 public class Pos{
     /**
-     * Column of the position
+     * Column of the position.
      */
     private final int c;
     /**
-     * Row of the position
+     * Row of the position.
      */
     private final int r;
 
@@ -28,7 +28,7 @@ public class Pos{
     }
 
     /**
-     * Constructs instance of Pos
+     * Constructs instance of Pos.
      * @param r New position's row
      * @param c New position's column
      */

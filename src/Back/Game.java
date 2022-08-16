@@ -2,7 +2,7 @@ package Back;
 import java.util.ArrayList;
 
 /**
- * This class manages the making of the game's field and operation
+ * This class manages the making of the game's field and operation.
  */
 public class Game {
     /**

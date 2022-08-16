@@ -4,7 +4,6 @@ import java.awt.*;
 
 /**
  * Abstract ancestor of Mine and NonMine types.
- *
  */
 public abstract class Field{
     /**
@@ -39,14 +38,14 @@ public abstract class Field{
         return position;
     }
     /**
-     * Returns the row value of given Field's position
+     * Returns the row value of given Field's position.
      * @return Value of position's row variable
      */
     public int getR(){
         return position.getR();
     }
     /**
-     * Returns the column value of given Field's position
+     * Returns the column value of given Field's position.
      * @return Value of position's col variable
      */
     public int getC(){

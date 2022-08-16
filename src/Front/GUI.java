@@ -115,12 +115,15 @@ public class GUI {
             }
         };
     }
+
+    /**
+     * Sets renderer of the cell which the Field parameter's in to modify its color.
+     * @param f Field to get its coordinate
+     */
     private void colorField(Field f) {
         TableColumn tc = playField.getColumnModel().getColumn(f.getC());
         tc.setCellRenderer(new CellColorRenderer());
     }
-
-
     /**
      * If triggered reveals all fields and displays the difficulty changer window.
      */

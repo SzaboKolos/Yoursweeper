@@ -3,11 +3,11 @@ package Back;
 import java.awt.*;
 
 /**
- * Descendant of Field
+ * Descendant of Field.
  */
 public class Mine extends Field{
     /**
-     * Constructs an instance of Mine
+     * Constructs an instance of Mine.
      * @param p Pos, Field's position
      */
     public Mine(Pos p){
