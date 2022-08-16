@@ -35,6 +35,8 @@ public class GUI {
      */
     private JFrame diffChangerFrame;
 
+    private Timer timer = initNewTimer();
+    private Label labelTime = new Label("0");
     /**
      * Creates instance of GUI.
      * @param g Inintial game
@@ -127,6 +129,12 @@ public class GUI {
         diffChangerFrame.setVisible(true);
     }
 
+    /**
+     *
+     */
+    private void win(){
+
+    }
     /**
      * If clicked on non-hidden field and the neighboring flags match the number of Mines next to this field
      * reveals all fields next to this field.
@@ -392,6 +400,7 @@ public class GUI {
                 replantTable(diff);
                 mainFrame.setSize((20*game.colNum()+26),20*game.rowNum()+74);
                 mainFrame.setLocationRelativeTo(null);
+                timer.restart();
             }
         });
         return btnThis;
@@ -407,10 +416,11 @@ public class GUI {
         diffChangerFrame.setResizable(false);
         JButton btnNew = new JButton("New Game");
         JPanel panel = new JPanel();
-        panel.setLayout(new BoxLayout(panel, BoxLayout.PAGE_AXIS));
+        panel.setLayout(new FlowLayout(FlowLayout.LEADING));
         panel.add(btnNew);
+        panel.add(labelTime);
+        timer.start();
 
-        //TODO timer and difficulty information
         btnNew.addMouseListener(new MouseAdapter() {
             public void mouseReleased(MouseEvent e) {
                 diffChangerFrame.setVisible(true);
@@ -418,7 +428,17 @@ public class GUI {
         });
         return panel;
     }
+    private Timer initNewTimer(){
+        return new Timer(1000, new ActionListener() {
+            int currentSec = 0;
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                currentSec++;
+                labelTime.setText(currentSec+"");
+            }
+        });
 
+    }
     /**
      * Resets the minefield to a fresh start.
      * @param diff Selector for the difficulty of the new game
@@ -435,8 +455,6 @@ public class GUI {
         }
     }
 
-
-
     /**
      * Renderer to change text of a single cell at a time.
      */
@@ -451,7 +469,6 @@ public class GUI {
         public CellColorRenderer() {
             super();
         }
-
         /**
          * Gets a cell modifies it, then returns it.
          * @param table Table
@@ -472,7 +489,7 @@ public class GUI {
                         default -> kolor = (Color.black);
                         case 1 -> kolor = (Color.blue);
                         case 2 -> kolor = (Color.decode("#00AA00")); //Dark Green
-                        case 3 -> kolor = (Color.decode("#55FFFF")); //Light Aqua
+                        case 3 -> kolor = (Color.decode("#FF9934")); //Orange
                         case 4 -> kolor = (Color.decode("#0000AA")); //Dark Blue
                         case 5 -> kolor = (Color.decode("#AA0000")); //Dark Red
                         case 6 -> kolor = (Color.decode("#00AAAA")); //Dark Aqua
@@ -485,12 +502,10 @@ public class GUI {
             }
             if (game.getFieldAt(row, column).isFlagged())
                 kolor = (Color.red);
-
             cell.setForeground(kolor);
             this.setFont(new Font("Arial", Font.BOLD, 12));
             this.setHorizontalAlignment(JLabel.CENTER);
             return cell;
             }
-
     }
 }
