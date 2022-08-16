@@ -233,21 +233,21 @@ public class Game {
      */
     public int neighborFlags(int r,int c){
         int flagNum = 0;
-        if(c != 0 && !minefield[r][c-1].isFlagged())
+        if(c != 0 && minefield[r][c-1].isFlagged())
             flagNum++;
-        if (c != colNum()-1 && !minefield[r][c+1].isFlagged())
+        if (c != colNum()-1 && minefield[r][c+1].isFlagged())
             flagNum++;
-        if (r != 0 && !minefield[r-1][c].isFlagged())
+        if (r != 0 && minefield[r-1][c].isFlagged())
             flagNum++;
-        if (r != colNum()-1 && !minefield[r+1][c].isFlagged())
+        if (r != colNum()-1 && minefield[r+1][c].isFlagged())
             flagNum++;
-        if (r != rowNum()-1 && c != colNum()-1 && !minefield[r+1][c+1].isFlagged())
+        if (r != rowNum()-1 && c != colNum()-1 && minefield[r+1][c+1].isFlagged())
             flagNum++;
-        if (r != rowNum()-1 && c != 0 && !minefield[r+1][c-1].isFlagged())
+        if (r != rowNum()-1 && c != 0 && minefield[r+1][c-1].isFlagged())
             flagNum++;
-        if (r != 0 && c != colNum()-1 && !minefield[r-1][c+1].isFlagged())
+        if (r != 0 && c != colNum()-1 && minefield[r-1][c+1].isFlagged())
             flagNum++;
-        if (r != 0 && c != 0 && !minefield[r-1][c-1].isFlagged())
+        if (r != 0 && c != 0 && minefield[r-1][c-1].isFlagged())
             flagNum++;
         return flagNum;
     }

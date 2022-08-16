@@ -87,10 +87,7 @@ public class GUI {
                 Field thisField = game.getFieldAt(row, col);
                 if (row >= 0 && col >= 0 && row < game.rowNum() && col < game.colNum()) {
                     if (SwingUtilities.isLeftMouseButton(evt) && !thisField.isFlagged() && thisField.isHidden()) {
-                        if (thisField.getClass().getSimpleName().equals("NonMine") && ((NonMine) thisField).getState() == game.neighborFlags(row,col))
-                            return;
-                            // revealNeighborFields(thisField);
-                        else if (thisField.getClass().getSimpleName().equals("NonMine") && ((NonMine) thisField).getState() == 0)
+                        if (thisField.getClass().getSimpleName().equals("NonMine") && ((NonMine) thisField).getState() == 0)
                             recursiveThingy((NonMine) thisField);
                         else if (thisField.getClass().getSimpleName().equals("Mine"))
                             lose();
@@ -99,6 +96,9 @@ public class GUI {
                             colorField(game.getField()[row][col]);
                         }
                     }
+                    else if (SwingUtilities.isLeftMouseButton(evt) && !thisField.isFlagged() && !thisField.isHidden()
+                            && thisField.getClass().getSimpleName().equals("NonMine") && ((NonMine) thisField).getState() == game.neighborFlags(row,col))
+                        revealNeighborFields(thisField);
                     else if (SwingUtilities.isRightMouseButton(evt) && thisField.isHidden()) {
                         if (thisField.isFlagged()) {
                             thisField.unflag();
@@ -137,7 +137,7 @@ public class GUI {
      *
      */
     private void win(){
-
+        //TODO if all mines are flagged and all nonmines are revealed
     }
     /**
      * If clicked on non-hidden field and the neighboring flags match the number of Mines next to this field
@@ -150,53 +150,39 @@ public class GUI {
 
         Field[] fS = getNeighbors(thisR,thisC);
 
-        if (game.isNonMine(fS[0]) && fS[0].isHidden()){
-            if (((NonMine)fS[0]).getState()==0)
-                recursiveThingy((NonMine)fS[0]);
-            else {
+        if (!f.isFlagged()){
+            if (game.isNonMine(fS[0]) && fS[0].isHidden()){
                 fS[0].reveal();
                 playField.setValueAt(fS[0],thisR-1,thisC);
             }
-        }
-        if (game.isNonMine(fS[1]) && fS[1].isHidden()) {
-            if (((NonMine)fS[1]).getState()==0)
-                recursiveThingy((NonMine)fS[1]);
-            else {
+            if (game.isNonMine(fS[1]) && fS[1].isHidden()) {
                 fS[1].reveal();
                 playField.setValueAt(fS[1],thisR,thisC+1);
             }
-        }
-        if (game.isNonMine(fS[2]) && fS[2].isHidden()){
-            if (((NonMine)fS[2]).getState()==0)
-                recursiveThingy((NonMine)fS[2]);
-            else {
+            if (game.isNonMine(fS[2]) && fS[2].isHidden()){
                 fS[2].reveal();
                 playField.setValueAt(fS[2],thisR+1,thisC);
             }
-        }
-        if (game.isNonMine(fS[3]) && fS[3].isHidden()){
-            if (((NonMine)fS[3]).getState()==0)
-                recursiveThingy((NonMine)fS[3]);
-            else {
+            if (game.isNonMine(fS[3]) && fS[3].isHidden()){
                 fS[3].reveal();
                 playField.setValueAt(fS[3],thisR,thisC-1);
             }
-        }
-        if (game.isNonMine(fS[4]) && ((NonMine)fS[4]).getState()!=0 && fS[4].isHidden()){
-            fS[4].reveal();
-            playField.setValueAt(fS[4],thisR-1,thisC-1);
-        }
-        if (game.isNonMine(fS[5]) && ((NonMine)fS[5]).getState()!=0 && fS[5].isHidden()){
-            fS[5].reveal();
-            playField.setValueAt(fS[5],thisR-1,thisC+1);
-        }
-        if (game.isNonMine(fS[6]) && ((NonMine)fS[6]).getState()!=0 && fS[6].isHidden()){
-            fS[6].reveal();
-            playField.setValueAt(fS[6],thisR+1,thisC-1);
-        }
-        if (game.isNonMine(fS[7]) && ((NonMine)fS[7]).getState()!=0 && fS[7].isHidden()){
-            fS[7].reveal();
-            playField.setValueAt(fS[7],thisR+1,thisC+1);
+            if (game.isNonMine(fS[4]) && ((NonMine)fS[4]).getState()!=0 && fS[4].isHidden()){
+                fS[4].reveal();
+                playField.setValueAt(fS[4],thisR-1,thisC-1);
+            }
+            if (game.isNonMine(fS[5]) && ((NonMine)fS[5]).getState()!=0 && fS[5].isHidden()){
+                fS[5].reveal();
+                playField.setValueAt(fS[5],thisR-1,thisC+1);
+            }
+            if (game.isNonMine(fS[6]) && ((NonMine)fS[6]).getState()!=0 && fS[6].isHidden()){
+                fS[6].reveal();
+                playField.setValueAt(fS[6],thisR+1,thisC-1);
+            }
+            if (game.isNonMine(fS[7]) && ((NonMine)fS[7]).getState()!=0 && fS[7].isHidden()){
+                fS[7].reveal();
+                playField.setValueAt(fS[7],thisR+1,thisC+1);
+            }
         }
     }
 
