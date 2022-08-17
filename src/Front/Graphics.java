@@ -112,12 +112,10 @@ public class Graphics {
                             && thisField.getClass().getSimpleName().equals("NonMine") && ((NonMine) thisField).getState() == game.neighborFlags(row,col))
                         revealNeighborFields(thisField);
                     else if (SwingUtilities.isRightMouseButton(evt) && thisField.isHidden()) {
-                        if (thisField.isFlagged()) {
+                        if (thisField.isFlagged())
                             thisField.unflag();
-                        }
-                        else {
+                        else
                             thisField.flag();
-                        }
                     colorField(thisField);
                     }
                     playField.setValueAt(thisField, row, col);
@@ -158,7 +156,7 @@ public class Graphics {
      */
     private void win(){
         //TODO if all mines are flagged and all nonmines are revealed
-        System.out.println("Szer ;)");
+        System.out.println("Szer <3");
     }
     /**
      * If clicked on non-hidden field and the neighboring flags match the number of Mines next to this field
@@ -271,9 +269,8 @@ public class Graphics {
             colNames[k] = (k+1)+"";
         }
         for (int c=0;c < game.colNum(); c++){
-            for (int r=0;r < game.rowNum(); r++){
+            for (int r=0;r < game.rowNum(); r++)
                 fields[r][c] = game.getField()[r][c];
-            }
         }
 
         return( new DefaultTableModel(fields,colNames) {public boolean isCellEditable(int row, int column) { return false; }});
@@ -300,9 +297,8 @@ public class Graphics {
             tabCol.setResizable(false);
         }
         for (int r=0; r < game.rowNum();r++) {
-            for (int c=0; c < game.colNum();c++) {
+            for (int c=0; c < game.colNum();c++)
                 table.setValueAt(game.getField()[r][c],r,c);
-            }
         }
         table.setRowHeight(20);
     }
