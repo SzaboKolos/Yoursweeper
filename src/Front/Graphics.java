@@ -35,10 +35,18 @@ public class Graphics {
      * Window with the game difficulty options.
      */
     private JFrame diffChangerFrame;
-
+    /**
+     * The game's own time manager.
+     */
     private final TimeManager timeManager = new TimeManager();
+    /**
+     * The timer which updates the label, using the timeManager's methods.
+     */
     private Timer timer;
-    Label labelTime = new Label("0");
+    /**
+     * Label which shows the player the time of the game.
+     */
+    private final Label labelTime = new Label("0");
     /**
      * Creates instance of GUI.
      * @param g Inintial game
