@@ -38,6 +38,7 @@ public class Graphics {
 
     private final TimeManager timeManager = new TimeManager();
     private Timer timer;
+    Label labelTime = new Label("0");
     /**
      * Creates instance of GUI.
      * @param g Inintial game
@@ -85,6 +86,8 @@ public class Graphics {
             public void mouseReleased(java.awt.event.MouseEvent evt) {
                 int row = playField.rowAtPoint(evt.getPoint());
                 int col = playField.columnAtPoint(evt.getPoint());
+                if (!timer.isRunning())
+                    timer.start();
                 Field thisField = game.getFieldAt(row, col);
                 if (row >= 0 && col >= 0 && row < game.rowNum() && col < game.colNum()) {
                     if (SwingUtilities.isLeftMouseButton(evt) && !thisField.isFlagged() && thisField.isHidden()) {
@@ -113,10 +116,19 @@ public class Graphics {
                     // (debug)
                     System.out.println(thisField.getClass().getSimpleName()+ thisField.getPos()+" H:"+ thisField.isHidden() +"; F:"+ thisField.isFlagged());
                 }
+                if (isObjectiveMet())
+                    win();
             }
         };
     }
 
+    /**
+     * Checks if you have won.
+     * @return True if all the objectives have been met, false if not.
+     */
+    private boolean isObjectiveMet(){
+        return (Arrays.stream(game.getField()).allMatch(x -> Arrays.stream(x).allMatch(y -> !y.isHidden() || (y.isFlagged() && game.isMine(y)))));
+    }
     /**
      * Sets renderer of the cell which the Field parameter's in to modify its color.
      * @param f Field to get its coordinate
@@ -131,7 +143,6 @@ public class Graphics {
     private void lose(){
         revealAllFields();
         diffChangerFrame.setVisible(true);
-        timer.stop();
     }
 
     /**
@@ -139,6 +150,7 @@ public class Graphics {
      */
     private void win(){
         //TODO if all mines are flagged and all nonmines are revealed
+        System.out.println("Szer ;)");
     }
     /**
      * If clicked on non-hidden field and the neighboring flags match the number of Mines next to this field
@@ -153,14 +165,14 @@ public class Graphics {
         if (Arrays.stream(fS).anyMatch(x -> game.isMine(x) && !x.isFlagged())){
             lose();
         } else
-            for (Field field: fS){
-                if (field != null && !field.isFlagged()){
-                    if (game.isNonMine(field) && ((NonMine)field).getState() == 0){
-                        recursiveThingy((NonMine) field);}
-                    else if (game.isNonMine(field))
-                        field.reveal();
-                    playField.setValueAt(field,field.getR(),field.getC());
-                    colorField(field);
+            for (Field neighbor: fS){
+                if (neighbor != null && !neighbor.isFlagged()){
+                    if (game.isNonMine(neighbor) && ((NonMine)neighbor).getState() == 0){
+                        recursiveThingy((NonMine) neighbor);}
+                    else if (game.isNonMine(neighbor))
+                        neighbor.reveal();
+                    playField.setValueAt(neighbor,neighbor.getR(),neighbor.getC());
+                    colorField(neighbor);
                 }
             }
     }
@@ -181,6 +193,7 @@ public class Graphics {
     /**
      * Only called on fields that has no Mine neighbor, discovers all fields like this in a cluster
      * reveals them, and gets called again recursively. Also reveals the NonMines on the cluster's rim.
+     * (Could be named better)
      * @param field Actual field to be discovered
      */
     private void recursiveThingy(NonMine field){
@@ -190,77 +203,15 @@ public class Graphics {
         playField.setValueAt(field, thisR, thisC);
 
         Field[] fS = getNeighbors(thisR, thisC);
-
-        if (game.isNonMine(fS[0]) && fS[0].isHidden()){
-            if (((NonMine)fS[0]).getState()==0)
-                recursiveThingy((NonMine)fS[0]);
-            else {
-                fS[0].reveal();
-                colorField(fS[0]);
-                playField.setValueAt(fS[0],thisR-1,thisC);
-            }
-        }
-        if (game.isNonMine(fS[1]) && fS[1].isHidden()) {
-            if (((NonMine)fS[1]).getState()==0)
-                recursiveThingy((NonMine)fS[1]);
-            else {
-                fS[1].reveal();
-                colorField(fS[1]);
-                playField.setValueAt(fS[1],thisR,thisC+1);
-            }
-        }
-        if (game.isNonMine(fS[2]) && fS[2].isHidden()){
-            if (((NonMine)fS[2]).getState()==0)
-                recursiveThingy((NonMine)fS[2]);
-            else {
-                fS[2].reveal();
-                colorField(fS[2]);
-                playField.setValueAt(fS[2],thisR+1,thisC);
-            }
-        }
-        if (game.isNonMine(fS[3]) && fS[3].isHidden()){
-            if (((NonMine)fS[3]).getState()==0)
-                recursiveThingy((NonMine)fS[3]);
-            else {
-                fS[3].reveal();
-                colorField(fS[3]);
-                playField.setValueAt(fS[3],thisR,thisC-1);
-            }
-        }
-        if (game.isNonMine(fS[4]) && fS[4].isHidden()){
-            if (((NonMine)fS[4]).getState()==0)
-                recursiveThingy((NonMine)fS[4]);
-            else {
-                fS[4].reveal();
-                colorField(fS[4]);
-                playField.setValueAt(fS[4],thisR-1,thisC-1);
-            }
-        }
-        if (game.isNonMine(fS[5]) && fS[5].isHidden()){
-            if (((NonMine)fS[5]).getState()==0)
-                recursiveThingy((NonMine)fS[5]);
-            else {
-                fS[5].reveal();
-                colorField(fS[5]);
-                playField.setValueAt(fS[5],thisR-1,thisC+1);
-            }
-        }
-        if (game.isNonMine(fS[6])&& fS[6].isHidden()){
-            if (((NonMine)fS[6]).getState()==0 )
-                recursiveThingy((NonMine)fS[6]);
-            else{
-                fS[6].reveal();
-                colorField(fS[6]);
-                playField.setValueAt(fS[6],thisR+1,thisC-1);
-            }
-        }
-        if (game.isNonMine(fS[7]) && fS[7].isHidden()) {
-            if (((NonMine) fS[7]).getState() == 0)
-                recursiveThingy((NonMine) fS[7]);
-            else {
-                fS[7].reveal();
-                colorField(fS[7]);
-                playField.setValueAt(fS[7], thisR + 1, thisC + 1);
+        for (Field neighbor: fS) {
+            if (game.isNonMine(neighbor) && neighbor.isHidden()){
+                if (((NonMine)neighbor).getState()==0)
+                    recursiveThingy((NonMine)neighbor);
+                else {
+                    neighbor.reveal();
+                    colorField(neighbor);
+                    playField.setValueAt(neighbor,neighbor.getR(),neighbor.getC());
+                }
             }
         }
     }
@@ -297,7 +248,6 @@ public class Graphics {
         model = makeModel();
         JTable table = new JTable(model);
         setTableDesign(table);
-        //table.setEnabled(false);
         table.addMouseListener(cellActionAdapter());
         return table;
     }
@@ -370,6 +320,7 @@ public class Graphics {
                 mainFrame.setSize((20*game.colNum()+26),20*game.rowNum()+74);
                 mainFrame.setLocationRelativeTo(null);
                 timeManager.resetTime();
+                labelTime.setText("0");
             }
         });
         return btnThis;
@@ -385,7 +336,6 @@ public class Graphics {
         diffChangerFrame.setResizable(false);
         JButton btnNew = new JButton("New Game");
         JPanel panel = new JPanel();
-        Label labelTime = new Label("0");
         panel.setLayout(new FlowLayout(FlowLayout.LEADING));
         panel.add(btnNew);
         panel.add(labelTime);
@@ -396,11 +346,11 @@ public class Graphics {
                 labelTime.setText(timeManager.getTime());
             }
         });
-        timer.start();
 
         btnNew.addMouseListener(new MouseAdapter() {
             public void mouseReleased(MouseEvent e) {
                 diffChangerFrame.setVisible(true);
+                timer.stop();
             }
         });
         return panel;
