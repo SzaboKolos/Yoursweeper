@@ -51,6 +51,11 @@ public class Graphics {
      * Creates instance of GUI.
      * @param g Inintial game
      */
+
+    private Scores easyScores = new Scores();
+    private Scores normalScores = new Scores();
+    private Scores hardScores = new Scores();
+
     public Graphics(Game g){
         game = g;
         initFrame();
@@ -133,7 +138,7 @@ public class Graphics {
      * @return True if all the objectives have been met, false if not.
      */
     private boolean isObjectiveMet(){
-        return (Arrays.stream(game.getField()).allMatch(x -> Arrays.stream(x).allMatch(y -> !y.isHidden() || (y.isFlagged() && game.isMine(y)))));
+        return (Arrays.stream(game.getField()).allMatch(x -> Arrays.stream(x).allMatch(y -> (game.isNonMine(y) && !y.isHidden()) || (game.isMine(y) && y.isFlagged()  && y.isHidden()))));
     }
     /**
      * Sets renderer of the cell which the Field parameter's in to modify its color.
@@ -157,6 +162,8 @@ public class Graphics {
     private void win(){
         //TODO if all mines are flagged and all nonmines are revealed
         System.out.println("Szer <3");
+        easyScores.addScore(new Score(Integer.parseInt(timeManager.getTime()),"Name"));
+        System.out.println(easyScores);
     }
     /**
      * If clicked on non-hidden field and the neighboring flags match the number of Mines next to this field
