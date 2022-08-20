@@ -27,15 +27,20 @@ public class Game {
     private Field[][] minefield;
 
     /**
+     * Difficulty identificator.
+     */
+    private int difficulty;
+
+    /**
      * Creates new instance of a Game using a difficulty parameter to set the new size.
      * @param difficulty Game's new difficulty
      */
     public Game(int difficulty){
         switch (difficulty) {
-            case 0 -> newGame(10, 10, 15) ;
-            case 1 -> newGame(20, 20, 60);
-            case 2 -> newGame(30, 30, 135);
-            default -> newGame(0, 0, 0);
+            case 0 -> newGame(10, 10, 15, difficulty) ;
+            case 1 -> newGame(20, 20, 60, difficulty);
+            case 2 -> newGame(30, 30, 135, difficulty);
+            default -> newGame(0, 0, 0, difficulty);
         }
     }
 
@@ -45,11 +50,12 @@ public class Game {
      * @param columns Number of columns of the field
      * @param mines Number of mines to be scattered on the field
      */
-    public void newGame(int rows, int columns, int mines){
+    public void newGame(int rows, int columns, int mines, int diff){
         this.row = rows;
         this.col = columns;
         this.mines = mines;
         this.minefield = new Field[rows][columns];
+        this.difficulty = diff;
 
         plantField();
     }
@@ -99,6 +105,13 @@ public class Game {
         }
     }
 
+    /**
+     * Returns private difficulty attribute.
+     * @return Difficulty is 0 if easy, 1 normal, 2 hard, else custom.
+     */
+    public int getDifficulty(){
+        return difficulty;
+    }
     /**
      * Returns private minefield attribute.
      * @return 2D Field array of Mines and NonMines
