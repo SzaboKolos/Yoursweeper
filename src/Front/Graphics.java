@@ -52,9 +52,9 @@ public class Graphics {
      * @param g Inintial game
      */
 
-    private Scores easyScores = new Scores();
-    private Scores normalScores = new Scores();
-    private Scores hardScores = new Scores();
+    private final Scores easyScores = new Scores();
+    private final Scores normalScores = new Scores();
+    private final Scores hardScores = new Scores();
 
     public Graphics(Game g){
         game = g;
@@ -157,13 +157,20 @@ public class Graphics {
     }
 
     /**
-     * If all the conditions are met, you win
+     * If all the conditions are met, you win.
      */
     private void win(){
-        //TODO if all mines are flagged and all nonmines are revealed
+        String filename;
+        switch (game.getDifficulty()){
+            default -> filename = "Easy";
+            case 1 -> filename = "Normal";
+            case 2 -> filename = "Hard";
+        }
+        easyScores.loadScores("./"+ filename +"Scores.txt");
+        easyScores.addScore(new Score(Integer.parseInt(timeManager.getTime()),filename));
+        easyScores.saveScores("./"+ filename +"Scores.txt");
+
         System.out.println("Szer <3");
-        easyScores.addScore(new Score(Integer.parseInt(timeManager.getTime()),"Name"));
-        System.out.println(easyScores);
     }
     /**
      * If clicked on non-hidden field and the neighboring flags match the number of Mines next to this field
