@@ -1,11 +1,12 @@
 package Front;
 
-import java.io.File;
+
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.List;
 
-public class Scores{
+public class Scores implements Serializable {
     private ArrayList<Score> topList = new ArrayList<>(10);
 
     public Scores(){
@@ -34,8 +35,11 @@ public class Scores{
         }
         return a.toString();
     }
-    public void loadScores(){
+    public void loadScores(String filename){
         //TODO file operation implement
-        topList = FileOperations.load();
+        topList = FileOperations.load(filename);
+    }
+    public void saveScores(String filename){
+        FileOperations.save(this,filename);
     }
 }

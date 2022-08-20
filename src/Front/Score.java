@@ -1,6 +1,8 @@
 package Front;
 
-public class Score {
+import java.io.Serializable;
+
+public class Score implements Serializable {
     private final int time;
     private final String name;
     private int number;
