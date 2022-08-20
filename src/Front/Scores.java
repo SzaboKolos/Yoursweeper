@@ -35,6 +35,9 @@ public class Scores implements Serializable {
         }
         return a.toString();
     }
+    public ArrayList<Score> getTopList(){
+        return topList;
+    }
     public void loadScores(String filename){
         //TODO file operation implement
         topList = FileOperations.load(filename);

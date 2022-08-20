@@ -52,9 +52,10 @@ public class Graphics {
      * @param g Inintial game
      */
 
-    private final Scores easyScores = new Scores();
-    private final Scores normalScores = new Scores();
-    private final Scores hardScores = new Scores();
+    /**
+     * Scores instance to store and serialize scores.
+     */
+    private final Scores scores = new Scores();
 
     public Graphics(Game g){
         game = g;
@@ -166,9 +167,9 @@ public class Graphics {
             case 1 -> filename = "Normal";
             case 2 -> filename = "Hard";
         }
-        easyScores.loadScores("./"+ filename +"Scores.txt");
-        easyScores.addScore(new Score(Integer.parseInt(timeManager.getTime()),filename));
-        easyScores.saveScores("./"+ filename +"Scores.txt");
+        scores.loadScores("./"+ filename +"Scores.txt");
+        scores.addScore(new Score(Integer.parseInt(timeManager.getTime()),filename));
+        scores.saveScores("./"+ filename +"Scores.txt");
 
         System.out.println("Szer <3");
     }
