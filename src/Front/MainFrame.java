@@ -5,7 +5,6 @@ import java.awt.event.*;
 import javax.swing.table.DefaultTableCellRenderer;
 import javax.swing.table.*;
 import java.awt.*;
-import java.util.ArrayList;
 import java.util.Arrays;
 
 import Back.Field;
@@ -15,15 +14,11 @@ import Back.Game;
 /**
  * Frontend of the project, everything that can be seen is here.
  */
-public class Graphics {
+public class MainFrame extends JFrame {
     /**
      * Attribute of the Game to be played.
      */
     private Game game;
-    /**
-     * The main window, contains the playfield and information fields.
-     */
-    private JFrame mainFrame;
     /**
      * JTable, contains the actual instance of Game, stylized.
      */
@@ -48,17 +43,13 @@ public class Graphics {
      * Label which shows the player the time of the game.
      */
     private final Label labelTime = new Label("0");
-    /**
-     * Creates instance of GUI.
-     * @param g Inintial game
-     */
 
     /**
      * Scores instance to store and serialize scores.
      */
     private final Scores scores = new Scores();
 
-    public Graphics(Game g){
+    public MainFrame(Game g){
         game = g;
         initFrame();
     }
@@ -66,26 +57,26 @@ public class Graphics {
      * Initializes mainFrame and diffChangerFrame.
      */
     private void initFrame(){
-        this.mainFrame = new JFrame("Yoursweeper");
+        this.setTitle("YourSweeper");
 
-        mainFrame.setSize((20*game.colNum()+10),20*game.rowNum()+30);
-        mainFrame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+        this.setSize((20*game.colNum()+10),20*game.rowNum()+30);
+        this.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         JPanel tablePane = new JPanel();
         this.playField = initTable();
         tablePane.add(playField);
-        mainFrame.getContentPane().add(tablePane, BorderLayout.NORTH);
-        mainFrame.getContentPane().add(initMenuPanel(), BorderLayout.SOUTH);
-        mainFrame.setResizable(false);
-        mainFrame.pack();
-        mainFrame.setLocationRelativeTo(null);
-        mainFrame.setVisible(true);
+        this.getContentPane().add(tablePane, BorderLayout.NORTH);
+        this.getContentPane().add(initMenuPanel(), BorderLayout.SOUTH);
+        this.setResizable(false);
+        this.pack();
+        this.setLocationRelativeTo(null);
+        this.setVisible(true);
 
-        JPanel chooser = new JPanel();
-        chooser.add(newDiffButton(0));
-        chooser.add(newDiffButton(1));
-        chooser.add(newDiffButton(2));
-        diffChangerFrame.add(chooser);
-        diffChangerFrame.setLocationRelativeTo(mainFrame);
+        JPanel chooserPane = new JPanel();
+        chooserPane.add(newDiffButton(0));
+        chooserPane.add(newDiffButton(1));
+        chooserPane.add(newDiffButton(2));
+        diffChangerFrame.add(chooserPane);
+        diffChangerFrame.setLocationRelativeTo(this);
     }
 
     /**
@@ -168,23 +159,14 @@ public class Graphics {
             case 1 -> fileName = "Normal";
             case 2 -> fileName = "Hard";
         }
+        scores.saveScores("./"+ fileName +"Scores.txt");
         scores.loadScores("./"+ fileName +"Scores.txt");
         scores.addScore(new Score(Integer.parseInt(timeManager.getTime()),fileName));
         scores.saveScores("./"+ fileName +"Scores.txt");
         timer.stop();
-        initScoreFrame(scores.get2DArray()).setVisible(true);
+        JFrame scoreFrame = new ScoreFrame(scores);
+        scoreFrame.setVisible(true);
         System.out.println("Szer <3");
-    }
-    private JFrame initScoreFrame(String[][] scores){
-        String[] header = {"Name","Time"};
-        JFrame scoreFrame = new JFrame();
-        JTable scoreTable = new JTable(scores,header);
-        scoreFrame.setSize(200,300);
-        scoreFrame.setLocationRelativeTo(null);
-        //scoreTable.setSize(200,300);
-        scoreFrame.add(scoreTable);
-
-        return scoreFrame;
     }
     /**
      * If clicked on non-hidden field and the neighboring flags match the number of Mines next to this field
@@ -343,6 +325,7 @@ public class Graphics {
             case 2 -> "Hard";
             default -> "Custom";
         };
+        JFrame mainFrame = this;
         JButton btnThis = new JButton(text);
         btnThis.setSize(100,25);
         btnThis.addMouseListener(new MouseAdapter() {

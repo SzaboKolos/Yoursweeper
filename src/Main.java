@@ -1,5 +1,5 @@
 import Back.Game;
-import Front.Graphics;
+import Front.MainFrame;
 /**
  * @author      Kolos Szabó <szabo.kolos.01 @ gmail.com>
  * @version     4.11
@@ -8,6 +8,6 @@ import Front.Graphics;
 class Main {
     public static void main(String[] args){
         Game game = new Game(0);
-        new Graphics(game);
+        new MainFrame(game);
     }
 }
