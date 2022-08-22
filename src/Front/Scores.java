@@ -38,8 +38,15 @@ public class Scores implements Serializable {
     public ArrayList<Score> getTopList(){
         return topList;
     }
+    public String[][] get2DArray(){
+        String[][] result = new String[10][2];
+        for (int k = 0; k< topList.size();k++){
+            result[k][0] = topList.get(k).getName();
+            result[k][1] = topList.get(k).getTime()+"";
+        }
+        return result;
+    }
     public void loadScores(String filename){
-        //TODO file operation implement
         topList = FileOperations.load(filename);
     }
     public void saveScores(String filename){
