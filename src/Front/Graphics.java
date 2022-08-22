@@ -5,6 +5,7 @@ import java.awt.event.*;
 import javax.swing.table.DefaultTableCellRenderer;
 import javax.swing.table.*;
 import java.awt.*;
+import java.util.ArrayList;
 import java.util.Arrays;
 
 import Back.Field;
@@ -161,17 +162,29 @@ public class Graphics {
      * If all the conditions are met, you win.
      */
     private void win(){
-        String filename;
+        String fileName;
         switch (game.getDifficulty()){
-            default -> filename = "Easy";
-            case 1 -> filename = "Normal";
-            case 2 -> filename = "Hard";
+            default -> fileName = "Easy";
+            case 1 -> fileName = "Normal";
+            case 2 -> fileName = "Hard";
         }
-        scores.loadScores("./"+ filename +"Scores.txt");
-        scores.addScore(new Score(Integer.parseInt(timeManager.getTime()),filename));
-        scores.saveScores("./"+ filename +"Scores.txt");
-
+        scores.loadScores("./"+ fileName +"Scores.txt");
+        scores.addScore(new Score(Integer.parseInt(timeManager.getTime()),fileName));
+        scores.saveScores("./"+ fileName +"Scores.txt");
+        timer.stop();
+        initScoreFrame(scores.get2DArray()).setVisible(true);
         System.out.println("Szer <3");
+    }
+    private JFrame initScoreFrame(String[][] scores){
+        String[] header = {"Name","Time"};
+        JFrame scoreFrame = new JFrame();
+        JTable scoreTable = new JTable(scores,header);
+        scoreFrame.setSize(200,300);
+        scoreFrame.setLocationRelativeTo(null);
+        //scoreTable.setSize(200,300);
+        scoreFrame.add(scoreTable);
+
+        return scoreFrame;
     }
     /**
      * If clicked on non-hidden field and the neighboring flags match the number of Mines next to this field
