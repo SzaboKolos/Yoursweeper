@@ -1,5 +1,8 @@
 import Back.Game;
-import Front.MainFrame;
+import Front.JMainFrame;
+import Front.Scores;
+import Front.TimeManager;
+
 /**
  * @author      Kolos Szabó <szabo.kolos.01 @ gmail.com>
  * @version     4.11
@@ -7,7 +10,6 @@ import Front.MainFrame;
  */
 class Main {
     public static void main(String[] args){
-        Game game = new Game(0);
-        new MainFrame(game);
+        new JMainFrame(new Game(0), new TimeManager(), new Scores());
     }
 }

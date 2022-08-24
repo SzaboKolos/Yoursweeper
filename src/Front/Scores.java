@@ -23,10 +23,12 @@ public class Scores implements Serializable {
             }
         }).toList();
 
-        for (int k = 0; k < sortedScores.size(); k++)
-            sortedScores.get(k).setNumber(k);
+        for (int k = 0; k < sortedScores.size(); k++){
+
+                sortedScores.get(k).setNumber(k);
+        }
         topList = new ArrayList<>(10);
-        topList.addAll(sortedScores);
+        sortedScores.stream().filter(x -> x.getNumber() < 10).forEach(y -> topList.add(y));
     }
     public String toString(){
         StringBuilder a = new StringBuilder();

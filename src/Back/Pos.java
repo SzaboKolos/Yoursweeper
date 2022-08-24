@@ -36,7 +36,6 @@ public class Pos{
         this.r = r;
         this.c = c;
     }
-
     /**
      * Overrides built-in toString() method.
      * @return Position in "[row][column]" format

@@ -1,6 +1,5 @@
 package Back;
 
-import java.awt.*;
 
 /**
  * Descendant of Field.

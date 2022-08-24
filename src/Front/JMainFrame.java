@@ -14,7 +14,7 @@ import Back.Game;
 /**
  * Frontend of the project, everything that can be seen is here.
  */
-public class MainFrame extends JFrame {
+public class JMainFrame extends JFrame {
     /**
      * Attribute of the Game to be played.
      */
@@ -34,7 +34,7 @@ public class MainFrame extends JFrame {
     /**
      * The game's own time manager.
      */
-    private final TimeManager timeManager = new TimeManager();
+    private final TimeManager timeManager;
     /**
      * The timer which updates the label, using the timeManager's methods.
      */
@@ -43,14 +43,15 @@ public class MainFrame extends JFrame {
      * Label which shows the player the time of the game.
      */
     private final Label labelTime = new Label("0");
-
     /**
      * Scores instance to store and serialize scores.
      */
-    private final Scores scores = new Scores();
+    private final Scores scores;
 
-    public MainFrame(Game g){
+    public JMainFrame(Game g, TimeManager tm, Scores s){
         game = g;
+        timeManager = tm;
+        scores = s;
         initFrame();
     }
     /**
@@ -71,12 +72,7 @@ public class MainFrame extends JFrame {
         this.setLocationRelativeTo(null);
         this.setVisible(true);
 
-        JPanel chooserPane = new JPanel();
-        chooserPane.add(newDiffButton(0));
-        chooserPane.add(newDiffButton(1));
-        chooserPane.add(newDiffButton(2));
-        diffChangerFrame.add(chooserPane);
-        diffChangerFrame.setLocationRelativeTo(this);
+        diffChangerFrame = new JDiffFrame(newDiffButton(0),newDiffButton(1),newDiffButton(2));
     }
 
     /**
@@ -159,12 +155,13 @@ public class MainFrame extends JFrame {
             case 1 -> fileName = "Normal";
             case 2 -> fileName = "Hard";
         }
-        scores.saveScores("./"+ fileName +"Scores.txt");
+        if (scores.getTopList().size() != 0)
+            scores.saveScores("./"+ fileName +"Scores.txt");
         scores.loadScores("./"+ fileName +"Scores.txt");
         scores.addScore(new Score(Integer.parseInt(timeManager.getTime()),fileName));
         scores.saveScores("./"+ fileName +"Scores.txt");
         timer.stop();
-        JFrame scoreFrame = new ScoreFrame(scores);
+        JFrame scoreFrame = new JScoreFrame(scores);
         scoreFrame.setVisible(true);
         System.out.println("Szer <3");
     }
@@ -283,7 +280,7 @@ public class MainFrame extends JFrame {
                 fields[r][c] = game.getField()[r][c];
         }
 
-        return( new DefaultTableModel(fields,colNames) {public boolean isCellEditable(int row, int column) { return false; }});
+        return ( new DefaultTableModel(fields,colNames) { public boolean isCellEditable(int row, int column) { return false; }});
     }
 
     /**
@@ -346,9 +343,6 @@ public class MainFrame extends JFrame {
      * @return JPanel with buttons and information of the current game.
      */
     private JPanel initMenuPanel(){
-        diffChangerFrame = new JFrame();
-        diffChangerFrame.setSize(new Dimension(250,75));
-        diffChangerFrame.setResizable(false);
         JButton btnNew = new JButton("New Game");
         JPanel panel = new JPanel();
         panel.setLayout(new FlowLayout(FlowLayout.LEADING));
