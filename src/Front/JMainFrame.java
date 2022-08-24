@@ -31,6 +31,7 @@ public class JMainFrame extends JFrame {
      * Window with the game difficulty options.
      */
     private JFrame diffChangerFrame;
+    private JFrame scoreFrame;
     /**
      * The game's own time manager.
      */
@@ -68,10 +69,10 @@ public class JMainFrame extends JFrame {
         this.getContentPane().add(tablePane, BorderLayout.NORTH);
         this.getContentPane().add(initMenuPanel(), BorderLayout.SOUTH);
         this.setResizable(false);
-        this.pack();
         this.setLocationRelativeTo(null);
         this.setVisible(true);
 
+        this.pack();
         diffChangerFrame = new JDiffFrame(newDiffButton(0),newDiffButton(1),newDiffButton(2));
     }
 
@@ -159,11 +160,15 @@ public class JMainFrame extends JFrame {
             scores.saveScores("./"+ fileName +"Scores.txt");
         scores.loadScores("./"+ fileName +"Scores.txt");
         timer.stop();
-        scores.addScore(new Score(Integer.parseInt(timeManager.getTime()),JOptionPane.showInputDialog(null, "Who.. Are you?")));
+        scores.addScore(new Score(Integer.parseInt(timeManager.getTime()),JOptionPane.showInputDialog(this, "Who.. Are you?")));
         scores.saveScores("./"+ fileName +"Scores.txt");
-        JFrame scoreFrame = new JScoreFrame(scores);
+        scoreFrame = new JScoreFrame(scores,this.getLocation());
+        scoreFrame.setVisible(false);
         scoreFrame.setVisible(true);
         System.out.println("Szer <3");
+    }
+    private void loadScoreFrame(){
+        //TODO
     }
     /**
      * If clicked on non-hidden field and the neighboring flags match the number of Mines next to this field
@@ -344,10 +349,16 @@ public class JMainFrame extends JFrame {
      */
     private JPanel initMenuPanel(){
         JButton btnNew = new JButton("New Game");
+        JButton btnScore = new JButton("S");
+        btnScore.setSize(25,25);
         JPanel panel = new JPanel();
         panel.setLayout(new FlowLayout(FlowLayout.LEADING));
         panel.add(btnNew);
         panel.add(labelTime);
+        panel.add(btnScore);
+        labelTime.setBackground(Color.decode("#c7c7c7"));
+        labelTime.setPreferredSize(new Dimension(70,25));
+        labelTime.setAlignment(Label.CENTER);
         timer = new Timer(1000, new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
@@ -360,6 +371,12 @@ public class JMainFrame extends JFrame {
             public void mouseReleased(MouseEvent e) {
                 diffChangerFrame.setVisible(true);
                 timer.stop();
+            }
+        });
+        btnScore.addMouseListener(new MouseAdapter() {
+            public void mouseReleased(MouseEvent e) {
+                scoreFrame.setVisible(true);
+                //TODO score load
             }
         });
         return panel;
