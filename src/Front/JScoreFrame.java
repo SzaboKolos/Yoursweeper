@@ -9,7 +9,7 @@ public class JScoreFrame extends JFrame {
         getScoreBoard(s);
         String[] header = {"Name", "Time"};
         JTable scoreTable = new JTable(scores, header);
-        this.setSize(200,300);
+        this.setSize(200,220);
         this.setLocationRelativeTo(null);
         scoreTable.setEnabled(false);
 

@@ -158,9 +158,9 @@ public class JMainFrame extends JFrame {
         if (scores.getTopList().size() != 0)
             scores.saveScores("./"+ fileName +"Scores.txt");
         scores.loadScores("./"+ fileName +"Scores.txt");
-        scores.addScore(new Score(Integer.parseInt(timeManager.getTime()),fileName));
-        scores.saveScores("./"+ fileName +"Scores.txt");
         timer.stop();
+        scores.addScore(new Score(Integer.parseInt(timeManager.getTime()),JOptionPane.showInputDialog(null, "Who.. Are you?")));
+        scores.saveScores("./"+ fileName +"Scores.txt");
         JFrame scoreFrame = new JScoreFrame(scores);
         scoreFrame.setVisible(true);
         System.out.println("Szer <3");
